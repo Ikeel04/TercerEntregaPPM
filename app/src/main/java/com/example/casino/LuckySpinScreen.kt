@@ -142,34 +142,34 @@ fun CardItem(iconRes: Int) {
             elevation = CardDefaults.cardElevation(10.dp),
             modifier = Modifier.size(100.dp)
         ) {
-                Image(
-                    painter = painterResource(id = iconRes),
-                    contentDescription = null,
-                    modifier = Modifier.size(100.dp)
+            Image(
+                painter = painterResource(id = iconRes),
+                contentDescription = null,
+                modifier = Modifier.size(100.dp)
                     .border(7.dp, Color(0xFFFFD700))
-                )
+            )
         }
     }
 }
 //Mensaje de ganador o perdedor
 @Composable
 fun WinMessage() {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .background(Color(0xFFFFD700), shape = RoundedCornerShape(40.dp)) // Bordes redondeados para la sección dorada
-                .padding(10.dp) // Margen interno para la sección dorada
-                .width(180.dp)
-        ) {
-            Text(
-                text = "¡You win!",
-                fontSize = 30.sp,
-                color = Color(0xFF7D2596),
-                fontFamily = makmure,
-            )
-        }
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .background(Color(0xFFFFD700), shape = RoundedCornerShape(40.dp)) // Bordes redondeados para la sección dorada
+            .padding(10.dp) // Margen interno para la sección dorada
+            .width(180.dp)
+    ) {
+        Text(
+            text = "¡You win!",
+            fontSize = 30.sp,
+            color = Color(0xFF7D2596),
+            fontFamily = makmure,
+        )
     }
+}
 
 //Box para el saldo disponible y un textField para que el usuario ingrese cuánto saldo desea apostar
 @Composable
@@ -214,13 +214,13 @@ fun SpinButton() {
                 .width(190.dp)
                 .height(60.dp)
                 .fillMaxSize(),
-                    colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF13d110),
-                    contentColor = Color.White
-        )
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF13d110),
+                contentColor = Color.White
+            )
 
 
-            ) {
+        ) {
             Text(text = "¡Girar!", fontSize = 24.sp)
         }
     }
@@ -228,7 +228,7 @@ fun SpinButton() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewLuckySpinScreen() {
-    MenuTheme {
+    CasinoTheme {
         LuckySpinScreen()
     }
 }
