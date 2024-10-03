@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
+//composable que contiene el nombre de la app y los juegos del casino
 @Composable
 fun LuckyCharmsView() {
     Box(
@@ -47,7 +47,7 @@ fun LuckyCharmsView() {
             .fillMaxSize()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.img_8),
+            painter = painterResource(id = R.drawable.fondo),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
@@ -74,8 +74,8 @@ fun LuckyCharmsView() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                FeatureSection(title = "LuckySpin", iconRes = R.drawable.img)
-                FeatureSection(title = "Torneo", iconRes = R.drawable.img_1)
+                FeatureSection(title = "LuckySpin", iconRes = R.drawable.luckyspin)
+                FeatureSection(title = "Torneo", iconRes = R.drawable.torneo)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -84,8 +84,8 @@ fun LuckyCharmsView() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                FeatureSection(title = "Ruleta", iconRes = R.drawable.img_2)
-                FeatureSection(title = "Estadisticas", iconRes = R.drawable.img_3)
+                FeatureSection(title = "Ruleta", iconRes = R.drawable.ruleta)
+                FeatureSection(title = "Estadisticas", iconRes = R.drawable.estadisticas)
             }
         }
     }
