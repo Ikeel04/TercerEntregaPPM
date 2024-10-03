@@ -9,9 +9,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.casino.ui.theme.CasinoTheme
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
@@ -41,5 +44,15 @@ fun LoginScreen(navController: NavHostController) {
                 Text(text = "Volver")
             }
         }
+    }
+
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewLogin() {
+    CasinoTheme {
+        val navController = rememberNavController()
+        LoginScreen(navController = navController)
     }
 }

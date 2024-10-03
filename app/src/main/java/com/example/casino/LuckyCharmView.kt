@@ -16,9 +16,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.casino.ui.theme.CasinoTheme
 
 @Composable
 fun LuckyCharmsView(navController: NavHostController) {
@@ -54,5 +57,14 @@ fun LuckyCharmsView(navController: NavHostController) {
                 Text(text = "Registrarse")
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewLuckyCharms() {
+    CasinoTheme {
+        val navController = rememberNavController()
+        LuckyCharmsView(navController = navController)
     }
 }
