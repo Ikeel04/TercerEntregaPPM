@@ -1,20 +1,30 @@
 package com.example.casino
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.casino.ui.theme.CasinoTheme
+
+// Definimos colores y tamaños como constantes para facilitar cambios futuros
+private val primaryColor = Color(0xFFAD0201)
+private val linkColor = Color(0xFF2E96E8)
+private val largeTextSize = 45.sp
+private val smallTextSize = 12.sp
+private val buttonTextSize = 20.sp
+private val buttonHeight = 60.dp
+private val textFieldSpacing = 20.dp
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
@@ -26,26 +36,75 @@ fun LoginScreen(navController: NavHostController) {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "Inicio de Sesión", fontSize = 30.sp)
+            LoginText("LUCKY CHARM")
+            Spacer(modifier = Modifier.height(50.dp))
 
-            Spacer(modifier = Modifier.height(16.dp))
+            LoginTextField(value = username, label = "E-MAIL", onValueChange = setUsername)
+            Spacer(modifier = Modifier.height(textFieldSpacing))
 
-            TextField(value = username, onValueChange = setUsername, label = { Text("Usuario") })
-            Spacer(modifier = Modifier.height(8.dp))
-            TextField(value = password, onValueChange = setPassword, label = { Text("Contraseña") })
+            LoginTextField(value = password, label = "CONTRASEÑA", onValueChange = setPassword)
+            Spacer(modifier = Modifier.height(textFieldSpacing))
 
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = { /* Acción de inicio de sesión */ }) {
-                Text(text = "Entrar")
-            }
+            LoginButton(onClick = { /* Acción de inicio de sesión */ })
+            Spacer(modifier = Modifier.height(textFieldSpacing))
 
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = { navController.popBackStack() }) {
-                Text(text = "Volver")
-            }
+            LoginTextButton("¿HAS OLVIDADO TU CONTRASEÑA?", onClick = { /* Acción para la contraseña olvidada */ })
+            LoginTextButton("¿NO TIENES CUENTA?", onClick = { /* Acción para el registro */ })
         }
     }
+}
 
+@Composable
+fun LoginText(text: String) {
+    Text(
+        text = text,
+        fontSize = largeTextSize,
+        fontWeight = FontWeight.Bold,
+        color = primaryColor
+    )
+}
+
+@Composable
+fun LoginTextField(value: String, label: String, onValueChange: (String) -> Unit) {
+    TextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label, fontSize = 13.sp) },
+        modifier = Modifier.fillMaxWidth(0.8f)
+    )
+}
+
+@Composable
+fun LoginButton(onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .height(buttonHeight)
+            .width(200.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = primaryColor,
+            contentColor = Color.White
+        ),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(10.dp)
+    ) {
+        Text(text = "INICIAR SESIÓN", fontSize = buttonTextSize)
+    }
+}
+
+@Composable
+fun LoginTextButton(text: String, onClick: () -> Unit) {
+    TextButton(
+        onClick = onClick,
+        modifier = Modifier.height(40.dp)
+    ) {
+        Text(
+            text = text,
+            fontSize = smallTextSize,
+            fontWeight = FontWeight.Medium,
+            textDecoration = TextDecoration.Underline,
+            color = linkColor
+        )
+    }
 }
 
 @Preview(showBackground = true)

@@ -9,7 +9,7 @@ import androidx.navigation.compose.rememberNavController
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "main") {
+    NavHost(navController = navController, startDestination = "login") {
         // Pantalla principal
         composable("main") {
             LuckyCharmsView(navController)
