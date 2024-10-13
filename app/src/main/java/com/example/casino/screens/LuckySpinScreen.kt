@@ -1,4 +1,4 @@
-package com.example.casino
+package com.example.casino.screens
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.casino.R
 import com.example.casino.ui.theme.CasinoTheme
 
 class Tragamonedas : ComponentActivity() {

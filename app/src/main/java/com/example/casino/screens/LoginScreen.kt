@@ -1,4 +1,4 @@
-package com.example.casino
+package com.example.casino.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -13,8 +13,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.casino.navigation.AppScreens
 import com.example.casino.ui.theme.CasinoTheme
 
 // Definimos colores y tamaños como constantes para facilitar cambios futuros
@@ -27,7 +29,7 @@ private val buttonHeight = 60.dp
 private val textFieldSpacing = 20.dp
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(navController : NavController) {
     val (username, setUsername) = remember { mutableStateOf("") }
     val (password, setPassword) = remember { mutableStateOf("") }
 
@@ -49,7 +51,9 @@ fun LoginScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(textFieldSpacing))
 
             LoginTextButton("¿HAS OLVIDADO TU CONTRASEÑA?", onClick = { /* Acción para la contraseña olvidada */ })
-            LoginTextButton("¿NO TIENES CUENTA?", onClick = { /* Acción para el registro */ })
+            LoginTextButton("¿NO TIENES CUENTA?", onClick = {
+                navController.navigate(route = AppScreens.RegisterScreen.route)
+            })
         }
     }
 }
@@ -107,11 +111,3 @@ fun LoginTextButton(text: String, onClick: () -> Unit) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewLogin() {
-    CasinoTheme {
-        val navController = rememberNavController()
-        LoginScreen(navController = navController)
-    }
-}

@@ -1,7 +1,14 @@
-package com.example.casino
+package com.example.casino.screens
 
-import android.widget.CheckBox
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -22,8 +29,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.casino.navigation.AppScreens
 import com.example.casino.ui.theme.CasinoTheme
 
 private val primaryColor = Color(0xFFAD0201)
@@ -35,7 +44,7 @@ private val buttonHeight = 60.dp
 private val textFieldSpacing = 20.dp
 
 @Composable
-fun RegisterScreen(navController: NavHostController) {
+fun RegisterScreen(navController: NavController) {
     val (username, setUsername) = remember { mutableStateOf("") }
     val (password, setPassword) = remember { mutableStateOf("") }
     val (confirmPassword, setConfirmPassword) = remember { mutableStateOf("") }
@@ -74,7 +83,9 @@ fun RegisterScreen(navController: NavHostController) {
             RegisterButton(onClick = { /* Acción de inicio de sesión */ })
             Spacer(modifier = Modifier.height(textFieldSpacing))
 
-            RegisterTextButton( "¿YA TIENES CUENTA?",onClick = { /* Acción para el registro */ })
+            RegisterTextButton( "¿YA TIENES CUENTA?",onClick = {
+                navController.popBackStack()
+            })
         }
     }
 }
@@ -132,11 +143,3 @@ fun RegisterTextButton(text: String, onClick: () -> Unit) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewRegister() {
-    CasinoTheme {
-        val navController = rememberNavController()
-        RegisterScreen(navController = navController)
-    }
-}
