@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1055865386993",
+    "project_id": "lucky-charms-88654",
+    "storage_bucket": "lucky-charms-88654.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1055865386993:android:bd7ea4ab934e8a1ebc7650",
+        "android_client_info": {
+          "package_name": "com.example.casino"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDA679bf9P7WlmGYtPz4TDV3REYIdSFslc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

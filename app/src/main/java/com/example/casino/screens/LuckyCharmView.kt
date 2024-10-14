@@ -1,5 +1,6 @@
 package com.example.casino.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,21 +13,37 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.casino.AuthState
+import com.example.casino.AuthViewModel
 import com.example.casino.R
-import com.example.casino.ui.theme.CasinoTheme
+import com.example.casino.navigation.AppScreens
 
 @Composable
-fun LuckyCharmsView() {
+fun LuckyCharmsView(navController: NavController, authViewModel: AuthViewModel) {
+    val authState = authViewModel.authState.observeAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(authState.value) {
+        when(authState.value){
+            is AuthState.Unauthenticated -> navController.navigate(route = AppScreens.LoginScreen.route)
+            else -> Unit
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -72,6 +89,16 @@ fun LuckyCharmsView() {
                 FeatureSection(title = "Ruleta", iconRes = R.drawable.ruleta)
                 FeatureSection(title = "Estadisticas", iconRes = R.drawable.estadisticas)
             }
+
+            TextButton(
+                onClick = {
+                    authViewModel.logout()
+                },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text(text = "Cerrar Sesión",
+                    color = Color.White,)
+            }
         }
     }
 }
@@ -95,13 +122,5 @@ fun FeatureSection(title: String, iconRes: Int) {
             fontWeight = FontWeight.Bold,
             color = Color.White
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LuckyCharmPreview() {
-    CasinoTheme {
-        LuckyCharmsView()
     }
 }
