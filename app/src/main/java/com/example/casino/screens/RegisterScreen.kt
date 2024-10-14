@@ -137,7 +137,7 @@ fun RegisterButton(onClick: () -> Unit) {
             containerColor = primaryColor,
             contentColor = Color.White
         ),
-        shape = androidx.compose.foundation.shape.RoundedCornerShape(10.dp)
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(10.dp),
     ) {
         Text(text = "REGISTRARSE", fontSize = buttonTextSize)
     }
