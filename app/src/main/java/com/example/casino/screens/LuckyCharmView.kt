@@ -1,16 +1,8 @@
 package com.example.casino.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -37,7 +29,7 @@ fun LuckyCharmsView(navController: NavController, authViewModel: AuthViewModel) 
     val context = LocalContext.current
 
     LaunchedEffect(authState.value) {
-        when(authState.value){
+        when (authState.value) {
             is AuthState.Unauthenticated -> navController.navigate(route = AppScreens.LoginScreen.route)
             else -> Unit
         }
@@ -65,48 +57,72 @@ fun LuckyCharmsView(navController: NavController, authViewModel: AuthViewModel) 
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
                     .padding(top = 100.dp)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Primera fila con botones de las secciones
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                FeatureSection(title = "LuckySpin", iconRes = R.drawable.luckyspin)
-                FeatureSection(title = "Torneo", iconRes = R.drawable.torneo)
+                FeatureSection(
+                    title = "LuckySpin",
+                    iconRes = R.drawable.luckyspin,
+                    onClick = { navController.navigate(AppScreens.LuckySpinScreen.route) } // Navega a LuckySpin
+                )
+                FeatureSection(
+                    title = "Torneo",
+                    iconRes = R.drawable.torneo,
+                    onClick = { /* Acción o navegación para Torneo */ }
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Segunda fila con botones de las secciones
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                FeatureSection(title = "Ruleta", iconRes = R.drawable.ruleta)
-                FeatureSection(title = "Estadisticas", iconRes = R.drawable.estadisticas)
+                FeatureSection(
+                    title = "Ruleta",
+                    iconRes = R.drawable.ruleta,
+                    onClick = { /* Acción o navegación para Ruleta */ }
+                )
+                FeatureSection(
+                    title = "Estadísticas",
+                    iconRes = R.drawable.estadisticas,
+                    onClick = { /* Acción o navegación para Estadísticas */ }
+                )
             }
 
+            // Botón de cerrar sesión
             TextButton(
                 onClick = {
                     authViewModel.logout()
                 },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
-                Text(text = "Cerrar Sesión",
-                    color = Color.White,)
+                Text(
+                    text = "Cerrar Sesión",
+                    color = Color.White,
+                )
             }
         }
     }
 }
 
 @Composable
-fun FeatureSection(title: String, iconRes: Int) {
+fun FeatureSection(title: String, iconRes: Int, onClick: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier
+            .padding(8.dp)
+            .clickable { onClick() } // Acción al hacer clic
     ) {
         Image(
             painter = painterResource(id = iconRes),

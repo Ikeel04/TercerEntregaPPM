@@ -1,5 +1,6 @@
 package com.example.casino.navigation
 
+import LuckySpinScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
@@ -21,6 +22,9 @@ fun AppNavigation(authViewModel: AuthViewModel) {
         }
         composable(route = AppScreens.LuckyCharmView.route){
             LuckyCharmsView(navController, authViewModel)
+        }
+        composable(route = AppScreens.LuckySpinScreen.route){
+            LuckySpinScreen(navController)
         }
     }
 }

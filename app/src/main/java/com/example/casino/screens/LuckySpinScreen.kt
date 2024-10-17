@@ -17,6 +17,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.casino.R
 import com.example.casino.ui.theme.CasinoTheme
 import kotlinx.coroutines.Dispatchers
@@ -30,14 +32,15 @@ class Tragamonedas : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CasinoTheme {
-                LuckySpinScreen()
+                val navController = rememberNavController()
+                LuckySpinScreen(navController)
             }
         }
     }
 }
 
 @Composable
-fun LuckySpinScreen() {
+fun LuckySpinScreen(navController: NavController) {
     var result by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
 
@@ -69,6 +72,15 @@ fun LuckySpinScreen() {
                     }
                 }
             })
+            Button(
+                onClick = {navController.popBackStack()},
+                modifier = Modifier
+                    .padding(top = 10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF13d110),
+                    contentColor = Color.White
+                )
+            ) {Text(text = "Volver") }
         }
     }
 }
@@ -197,7 +209,7 @@ fun ActionButtons() {
 @Composable
 fun SpinButton(onSpinClick: () -> Unit) {
     Column(
-        modifier = Modifier.size(300.dp),
+        modifier = Modifier.size(250.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -215,6 +227,7 @@ fun SpinButton(onSpinClick: () -> Unit) {
         ) {
             Text(text = "¡Girar!", fontSize = 24.sp)
         }
+
     }
 }
 
@@ -240,6 +253,7 @@ suspend fun getRandomNumberFromApi(): Int {
 @Composable
 fun LuckySpinScreenPreview() {
     CasinoTheme {
-        LuckySpinScreen()
+        val navController = rememberNavController()
+        LuckySpinScreen(navController)
     }
 }
