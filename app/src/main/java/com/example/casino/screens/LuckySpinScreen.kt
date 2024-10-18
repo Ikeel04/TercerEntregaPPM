@@ -26,6 +26,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.HttpURLConnection
 import java.net.URL
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import androidx.compose.runtime.Composable
+import kotlin.random.Random
+import androidx.compose.ui.platform.LocalContext
+
+
 
 class Tragamonedas : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +51,7 @@ class Tragamonedas : ComponentActivity() {
 fun LuckySpinScreen(navController: NavController) {
     var result by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -64,7 +73,11 @@ fun LuckySpinScreen(navController: NavController) {
             ActionButtons()
             SpinButton(onSpinClick = {
                 coroutineScope.launch {
-                    val randomNumber = getRandomNumberFromApi()
+                    val randomNumber = if (context.isOnline()) {
+                        getRandomNumberFromApi()
+                    } else {
+                        getRandomNumberLocal()
+                    }
                     result = if (randomNumber == 3) {
                         "¡You win!"
                     } else {
@@ -230,6 +243,18 @@ fun SpinButton(onSpinClick: () -> Unit) {
 
     }
 }
+
+fun Context.isOnline(): Boolean {
+    val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val network = connectivityManager.activeNetwork ?: return false
+    val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+    return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)}
+
+
+fun getRandomNumberLocal(): Int {
+    return Random.nextInt(1, 6)
+}
+
 
 suspend fun getRandomNumberFromApi(): Int {
     return withContext(Dispatchers.IO) {
