@@ -9,6 +9,7 @@ import com.example.casino.AuthViewModel
 import com.example.casino.screens.LoginScreen
 import com.example.casino.screens.LuckyCharmsView
 import com.example.casino.screens.RegisterScreen
+import com.example.casino.screens.StatisticsScreen
 
 @Composable
 fun AppNavigation(authViewModel: AuthViewModel) {
@@ -25,6 +26,9 @@ fun AppNavigation(authViewModel: AuthViewModel) {
         }
         composable(route = AppScreens.LuckySpinScreen.route){
             LuckySpinScreen(navController)
+        }
+        composable(route = AppScreens.StatisticsScreen.route){
+            StatisticsScreen(navController)
         }
     }
 }

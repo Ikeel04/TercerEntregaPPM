@@ -3,6 +3,9 @@ package com.example.casino.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -96,15 +99,18 @@ fun LuckyCharmsView(navController: NavController, authViewModel: AuthViewModel) 
                 FeatureSection(
                     title = "Estadísticas",
                     iconRes = R.drawable.estadisticas,
-                    onClick = { /* Acción o navegación para Estadísticas */ }
+                    onClick = { navController.navigate(AppScreens.StatisticsScreen.route) }
                 )
             }
+            Spacer(modifier = Modifier.height(50.dp))
 
             // Botón de cerrar sesión
-            TextButton(
+            Button(
                 onClick = {
                     authViewModel.logout()
                 },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB71C1C)),
+                shape = RoundedCornerShape(8.dp),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text(
