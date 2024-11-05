@@ -12,9 +12,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 @Composable
-fun TournamentTree() {
+fun LobbyScreen(navController : NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -104,10 +105,4 @@ fun PlayerCircle(name: String) {
         }
         Text(text = name, fontSize = 16.sp, color = Color.White)
     }
-}
-
-@Preview
-@Composable
-fun PreviewTournamentTree() {
-    TournamentTree()
 }

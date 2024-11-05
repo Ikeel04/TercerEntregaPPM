@@ -80,7 +80,7 @@ fun LuckyCharmsView(navController: NavController, authViewModel: AuthViewModel) 
                 FeatureSection(
                     title = "Torneo",
                     iconRes = R.drawable.torneo,
-                    onClick = { /* Acción o navegación para Torneo */ }
+                    onClick = { navController.navigate(AppScreens.LobbyScreen.route) }
                 )
             }
 

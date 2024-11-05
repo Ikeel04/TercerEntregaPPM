@@ -6,5 +6,8 @@ sealed class AppScreens (val route: String) {
     object LuckyCharmView: AppScreens("lucky_charms_view")
     object LuckySpinScreen: AppScreens("lucky_spin_screen")
     object StatisticsScreen: AppScreens("statistics_screen")
+    object Juego: AppScreens("juego_screen")
+    object LobbyScreen: AppScreens("lobby_screen")
+
 
 }
