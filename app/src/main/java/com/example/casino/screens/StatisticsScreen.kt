@@ -1,22 +1,14 @@
 package com.example.casino.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,14 +18,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.casino.CounterViewModel
 import com.example.casino.R
 
 @Composable
-fun StatisticsScreen(navController : NavController) {
+fun StatisticsScreen(
+    navController: NavController,
+    counterViewModel: CounterViewModel = viewModel()
+) {
+    // Observa los contadores desde el ViewModel
+    val luckySpinCount by counterViewModel.luckySpinCount.collectAsState()
+    val torneoCount by counterViewModel.torneoCount.collectAsState()
+    val ruletaCount by counterViewModel.ruletaCount.collectAsState()
+    val juegoFavorito by counterViewModel.juegoFavorito.collectAsState() // Observa juegoFavorito
+
     Box(
         modifier = Modifier
-            .fillMaxSize(),// Agrega padding superior para separar el contenido del borde
+            .fillMaxSize(),
         contentAlignment = Alignment.TopCenter
     ) {
         Image(
@@ -47,10 +50,10 @@ fun StatisticsScreen(navController : NavController) {
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()
-                .offset(y = 100.dp), // Desplaza la columna hacia abajo si necesitas más separación
+                .offset(y = 100.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Title
+            // Título
             Text(
                 text = "TUS ESTADÍSTICAS",
                 fontSize = 40.sp,
@@ -60,18 +63,16 @@ fun StatisticsScreen(navController : NavController) {
                 modifier = Modifier.padding(bottom = 24.dp)
             )
 
-            // Statistic items
-            StatisticItem(label = "GANANCIAS:", value = "Q 0,000,000.00")
+            StatisticItem(label = "LUCKY SPIN:", value = "$luckySpinCount")
             Spacer(modifier = Modifier.height(16.dp))
-            StatisticItem(label = "PARTIDAS JUGADAS:", value = "0,000 PJ")
+            StatisticItem(label = "TORNEO:", value = "$torneoCount")
             Spacer(modifier = Modifier.height(16.dp))
-            StatisticItem(label = "RACHA DE VICTORIAS:", value = "00 SEGUIDAS")
+            StatisticItem(label = "RULETA:", value = "$ruletaCount")
             Spacer(modifier = Modifier.height(16.dp))
-            StatisticItem(label = "JUEGO FAVORITO:", value = "NOMBRE JUEGO")
+            StatisticItem(label = "JUEGO FAVORITO:", value = juegoFavorito) // Muestra juegoFavorito desde el ViewModel
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            // Close Button
             Button(
                 onClick = { navController.popBackStack() },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB71C1C)),

@@ -8,6 +8,4 @@ sealed class AppScreens (val route: String) {
     object StatisticsScreen: AppScreens("statistics_screen")
     object Juego: AppScreens("juego_screen")
     object LobbyScreen: AppScreens("lobby_screen")
-
-
 }

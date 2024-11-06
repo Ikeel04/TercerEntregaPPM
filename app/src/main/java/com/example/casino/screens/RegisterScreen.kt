@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.casino.AuthState
 import com.example.casino.AuthViewModel
-import com.example.casino.navigation.AppNavigation
 import com.example.casino.navigation.AppScreens
 
 private val primaryColor = Color(0xFFAD0201)

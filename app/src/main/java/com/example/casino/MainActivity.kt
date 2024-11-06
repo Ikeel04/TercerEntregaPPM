@@ -8,16 +8,18 @@ import com.example.casino.navigation.AppNavigation
 import com.example.casino.ui.theme.CasinoTheme
 
 class MainActivity : ComponentActivity() {
+
+    // Instancia compartida de CounterViewModel
+    private val counterViewModel: CounterViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val authViewModel : AuthViewModel by viewModels()
         setContent {
-            CasinoTheme{
-                AppNavigation(authViewModel = authViewModel)
+            CasinoTheme {
+                // Pasa el authViewModel y el counterViewModel a la navegación
+                AppNavigation(authViewModel = authViewModel, counterViewModel = counterViewModel)
             }
         }
     }
 }
-
-
-

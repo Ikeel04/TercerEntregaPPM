@@ -1,3 +1,5 @@
+package com.example.casino.screens
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -32,8 +34,6 @@ import android.net.NetworkCapabilities
 import androidx.compose.runtime.Composable
 import kotlin.random.Random
 import androidx.compose.ui.platform.LocalContext
-
-
 
 class Tragamonedas : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
