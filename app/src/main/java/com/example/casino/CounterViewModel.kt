@@ -19,7 +19,6 @@ class CounterViewModel : ViewModel() {
     private val _ruletaCount = MutableStateFlow(0)
     val ruletaCount: StateFlow<Int> = _ruletaCount
 
-    // Juego favorito calculado en tiempo real
     val juegoFavorito: StateFlow<String> = combine(
         _luckySpinCount, _torneoCount, _ruletaCount
     ) { luckySpin, torneo, ruleta ->

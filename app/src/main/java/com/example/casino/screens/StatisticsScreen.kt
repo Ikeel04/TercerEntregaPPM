@@ -28,11 +28,10 @@ fun StatisticsScreen(
     navController: NavController,
     counterViewModel: CounterViewModel = viewModel()
 ) {
-    // Observa los contadores desde el ViewModel
     val luckySpinCount by counterViewModel.luckySpinCount.collectAsState()
     val torneoCount by counterViewModel.torneoCount.collectAsState()
     val ruletaCount by counterViewModel.ruletaCount.collectAsState()
-    val juegoFavorito by counterViewModel.juegoFavorito.collectAsState() // Observa juegoFavorito
+    val juegoFavorito by counterViewModel.juegoFavorito.collectAsState()
 
     Box(
         modifier = Modifier
@@ -69,8 +68,7 @@ fun StatisticsScreen(
             Spacer(modifier = Modifier.height(16.dp))
             StatisticItem(label = "RULETA:", value = "$ruletaCount")
             Spacer(modifier = Modifier.height(16.dp))
-            StatisticItem(label = "JUEGO FAVORITO:", value = juegoFavorito) // Muestra juegoFavorito desde el ViewModel
-
+            StatisticItem(label = "JUEGO FAVORITO:", value = juegoFavorito)
             Spacer(modifier = Modifier.height(40.dp))
 
             Button(

@@ -93,9 +93,10 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel) {
             }
             Spacer(modifier = Modifier.height(textFieldSpacing))
 
-            RegisterButton(onClick = {
-                authViewModel.registro(username, password)
-            })
+            RegisterButton(
+                onClick = { authViewModel.registro(username, password) },
+                enabled = checkedState
+            )
             Spacer(modifier = Modifier.height(textFieldSpacing))
 
             RegisterTextButton( "¿YA TIENES CUENTA?",onClick = {
@@ -126,14 +127,15 @@ fun RegisterTextField(value: String, label: String, onValueChange: (String) -> U
 }
 
 @Composable
-fun RegisterButton(onClick: () -> Unit) {
+fun RegisterButton(onClick: () -> Unit, enabled: Boolean) {
     Button(
         onClick = onClick,
+        enabled = enabled,
         modifier = Modifier
             .height(buttonHeight)
             .width(200.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = primaryColor,
+            containerColor = if (enabled) primaryColor else Color.Gray,
             contentColor = Color.White
         ),
         shape = androidx.compose.foundation.shape.RoundedCornerShape(10.dp),

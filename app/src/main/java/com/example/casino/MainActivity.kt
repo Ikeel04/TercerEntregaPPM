@@ -9,7 +9,6 @@ import com.example.casino.ui.theme.CasinoTheme
 
 class MainActivity : ComponentActivity() {
 
-    // Instancia compartida de CounterViewModel
     private val counterViewModel: CounterViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
 
@@ -17,7 +16,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CasinoTheme {
-                // Pasa el authViewModel y el counterViewModel a la navegación
                 AppNavigation(authViewModel = authViewModel, counterViewModel = counterViewModel)
             }
         }
