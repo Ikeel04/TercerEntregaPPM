@@ -26,7 +26,8 @@ class CounterViewModel : ViewModel() {
         when {
             torneo > luckySpin && torneo > ruleta -> "Torneo"
             luckySpin > torneo && luckySpin > ruleta -> "LuckySpin"
-            else -> "Ruleta"
+            ruleta > luckySpin && ruleta > torneo -> "Ruleta"
+            else -> "NULL"
         }
     }.stateIn(
         scope = viewModelScope,
