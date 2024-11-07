@@ -34,6 +34,7 @@ import android.net.NetworkCapabilities
 import androidx.compose.runtime.Composable
 import kotlin.random.Random
 import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.delay
 
 class Tragamonedas : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,8 +51,14 @@ class Tragamonedas : ComponentActivity() {
 @Composable
 fun LuckySpinScreen(navController: NavController) {
     var result by remember { mutableStateOf("") }
+    var saldo by remember { mutableStateOf(1000) }
+    var apuesta by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
+
+    // Estado para controlar el giro
+    var isSpinning by remember { mutableStateOf(false) }
+    var reelImages by remember { mutableStateOf(listOf(R.drawable.corazon, R.drawable.arcoiris, R.drawable.herradura)) }
 
     Box(
         modifier = Modifier
@@ -68,32 +75,46 @@ fun LuckySpinScreen(navController: NavController) {
             modifier = Modifier.fillMaxSize()
         ) {
             Header()
-            IconCards()
+            IconCards(reelImages, isSpinning)
             WinMessage(result)
-            ActionButtons()
+            ActionButtons(saldo, apuesta) {
+                apuesta = it
+            }
             SpinButton(onSpinClick = {
-                coroutineScope.launch {
-                    val randomNumber = if (context.isOnline()) {
-                        getRandomNumberFromApi()
-                    } else {
-                        getRandomNumberLocal()
-                    }
-                    result = if (randomNumber == 3) {
-                        "¡You win!"
-                    } else {
-                        "You lose"
+                val apuestaInt = apuesta.toIntOrNull() ?: 0
+                if (apuestaInt > 0 && apuestaInt <= saldo) {
+                    coroutineScope.launch {
+                        if (context.isOnline()) {
+                            getRandomNumberFromApi()
+                        } else {
+                            getRandomIcon()
+                        }
+                        isSpinning = true
+                        delay(2000L) // Simula el giro de los carretes por 2 segundos
+                        isSpinning = false
+
+                        // Genera un número aleatorio para cada carrete al detenerse
+                        //reelImages = List(3) { getRandomIcon() }
+                        if (reelImages.distinct().size == 1) {
+                            result = "¡You win!"
+                            saldo += apuestaInt
+                        } else {
+                            result = "You lose"
+                            saldo -= apuestaInt
+                        }
+                        apuesta = "" // Limpiar el campo de apuesta después de girar
                     }
                 }
             })
             Button(
-                onClick = {navController.popBackStack()},
+                onClick = { navController.popBackStack() },
                 modifier = Modifier
                     .padding(top = 10.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF13d110),
                     contentColor = Color.White
                 )
-            ) {Text(text = "Volver") }
+            ) { Text(text = "Volver") }
         }
     }
 }
@@ -131,7 +152,7 @@ fun Header() {
 }
 
 @Composable
-fun IconCards() {
+fun IconCards(reelImages: List<Int>, isSpinning: Boolean) {
     Box(
         modifier = Modifier
             .width(350.dp)
@@ -144,17 +165,31 @@ fun IconCards() {
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
-
         ) {
-            CardItem(R.drawable.corazon)
-            CardItem(R.drawable.arcoiris)
-            CardItem(R.drawable.herradura)
+            reelImages.forEach { iconRes ->
+                CardItem(iconRes, isSpinning)
+            }
         }
     }
 }
 
 @Composable
-fun CardItem(iconRes: Int) {
+fun CardItem(iconRes: Int, isSpinning: Boolean) {
+    var currentIcon by remember { mutableStateOf(iconRes) }
+
+    // Si el carrete está girando, cambia la imagen rápidamente
+    LaunchedEffect(isSpinning) {
+        if (isSpinning) {
+            while (isSpinning) {
+                currentIcon = getRandomIcon()
+                delay(100L) // Velocidad de cambio de imagen
+            }
+        } else {
+            // Al detenerse, mantiene el icono final asignado desde IconCards
+            currentIcon = iconRes
+        }
+    }
+
     Box(
         modifier = Modifier.size(100.dp)
     ) {
@@ -164,13 +199,21 @@ fun CardItem(iconRes: Int) {
             modifier = Modifier.size(100.dp)
         ) {
             Image(
-                painter = painterResource(id = iconRes),
+                painter = painterResource(id = currentIcon),
                 contentDescription = null,
                 modifier = Modifier.size(100.dp)
                     .background(Color(0xFFFFD700))
             )
         }
     }
+}
+
+fun getRandomIcon(): Int {
+    val icons = listOf(R.drawable.corazon, R.drawable.arcoiris, R.drawable.herradura)
+    return icons[Random.nextInt(icons.size)]
+}
+fun getRandomNumberLocal(): Int {
+    return Random.nextInt(1, 3)
 }
 
 @Composable
@@ -193,8 +236,7 @@ fun WinMessage(result: String) {
 }
 
 @Composable
-fun ActionButtons() {
-    var apuesta by remember { mutableStateOf("") }
+fun ActionButtons(saldo: Int, apuesta: String, onApuestaChange: (String) -> Unit) {
     Box(
         modifier = Modifier.padding(20.dp)
     ) {
@@ -205,14 +247,12 @@ fun ActionButtons() {
                     .padding(10.dp)
                     .width(260.dp)
             ) {
-                Text(
-                    text = "Saldo disponible: 10,000",
-                )
+                Text(text = "Saldo disponible: $saldo")
             }
             Spacer(modifier = Modifier.height(8.dp))
             TextField(
                 value = apuesta,
-                onValueChange = { apuesta = it },
+                onValueChange = onApuestaChange,
                 label = { Text("Saldo a apostar") }
             )
         }
@@ -240,7 +280,6 @@ fun SpinButton(onSpinClick: () -> Unit) {
         ) {
             Text(text = "¡Girar!", fontSize = 24.sp)
         }
-
     }
 }
 
@@ -248,13 +287,8 @@ fun Context.isOnline(): Boolean {
     val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val network = connectivityManager.activeNetwork ?: return false
     val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
-    return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)}
-
-
-fun getRandomNumberLocal(): Int {
-    return Random.nextInt(1, 6)
+    return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
 }
-
 
 suspend fun getRandomNumberFromApi(): Int {
     return withContext(Dispatchers.IO) {
@@ -274,7 +308,7 @@ suspend fun getRandomNumberFromApi(): Int {
     }
 }
 
-@Preview (showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun LuckySpinScreenPreview() {
     CasinoTheme {
