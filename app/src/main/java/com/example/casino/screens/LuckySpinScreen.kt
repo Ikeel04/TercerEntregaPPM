@@ -94,7 +94,7 @@ fun LuckySpinScreen(navController: NavController) {
                         isSpinning = false
 
                         // Genera un número aleatorio para cada carrete al detenerse
-                        //reelImages = List(3) { getRandomIcon() }
+                        reelImages = List(3) { getRandomIcon() }
                         if (reelImages.distinct().size == 1) {
                             result = "¡You win!"
                             saldo += apuestaInt
