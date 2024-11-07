@@ -121,10 +121,12 @@ fun RegisterTextField(value: String, label: String, onValueChange: (String) -> U
     TextField(
         value = value,
         onValueChange = onValueChange,
+        maxLines = 1,
         label = { Text(label, fontSize = 13.sp) },
         modifier = Modifier.fillMaxWidth(0.8f)
     )
 }
+
 
 @Composable
 fun RegisterButton(onClick: () -> Unit, enabled: Boolean) {

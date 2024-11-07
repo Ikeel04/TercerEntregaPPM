@@ -48,9 +48,6 @@ fun LuckyCharmsView(
     counterViewModel: CounterViewModel = viewModel()
 ) {
     val authState = authViewModel.authState.observeAsState()
-    val luckySpinCount by counterViewModel.luckySpinCount.collectAsState()
-    val torneoCount by counterViewModel.torneoCount.collectAsState()
-    val ruletaCount by counterViewModel.ruletaCount.collectAsState()
 
     LaunchedEffect(authState.value) {
         when (authState.value) {
