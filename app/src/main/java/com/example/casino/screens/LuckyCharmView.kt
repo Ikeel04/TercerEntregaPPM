@@ -36,6 +36,10 @@ import com.example.casino.AuthViewModel
 import com.example.casino.CounterViewModel
 import com.example.casino.R
 import com.example.casino.navigation.AppScreens
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.example.casino.ui.theme.CasinoTheme
+
 
 @Composable
 fun LuckyCharmsView(
@@ -169,3 +173,17 @@ fun FeatureSection(title: String, iconRes: Int, onClick: () -> Unit) {
         )
         }
     }
+@Preview(showBackground = true)
+@Composable
+fun LuckyCharmsViewPreview() {
+    CasinoTheme {
+        val navController = rememberNavController()
+        val authViewModel = AuthViewModel()
+        val counterViewModel = CounterViewModel()
+        LuckyCharmsView(
+            navController = navController,
+            authViewModel = authViewModel,
+            counterViewModel = counterViewModel
+        )
+    }
+}
