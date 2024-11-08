@@ -96,6 +96,7 @@ fun LoginText(text: String) {
 fun LoginTextField(value: String, label: String, onValueChange: (String) -> Unit) {
     TextField(
         value = value,
+        maxLines = 1,
         onValueChange = onValueChange,
         label = { Text(label, fontSize = 13.sp) },
         modifier = Modifier.fillMaxWidth(0.8f)
