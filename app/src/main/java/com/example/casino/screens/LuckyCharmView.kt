@@ -118,6 +118,7 @@ fun LuckyCharmsView(
                     iconRes = R.drawable.ruleta,
                     onClick = {
                         counterViewModel.incrementRuletaCount()
+                        navController.navigate(AppScreens.RouletteScreen.route)
                     }
                 )
                 FeatureSection(

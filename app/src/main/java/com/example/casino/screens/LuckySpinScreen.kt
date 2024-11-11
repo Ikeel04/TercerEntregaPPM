@@ -32,6 +32,14 @@ import com.example.casino.ui.theme.CasinoTheme
 import kotlinx.coroutines.*
 import java.net.HttpURLConnection
 import java.net.URL
+<<<<<<< HEAD
+=======
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.util.Log
+import androidx.compose.runtime.Composable
+>>>>>>> 2efc35310c3ffa192b8b35476c99662393cb3e18
 import kotlin.random.Random
 
 class Tragamonedas : ComponentActivity() {
@@ -83,8 +91,10 @@ fun LuckySpinScreen(
                 if (apuestaInt > 0 && apuestaInt <= saldo) {
                     coroutineScope.launch {
                         if (context.isOnline()) {
+                            Log.d("LuckySpin", "Usando API para obtener número aleatorio")
                             getRandomNumberFromApi()
                         } else {
+                            Log.d("LuckySpin", "Usando número aleatorio local")
                             getRandomIcon()
                         }
                         isSpinning = true
@@ -281,7 +291,9 @@ fun Context.isOnline(): Boolean {
     val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
     return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
 }
-
+fun getRandomNumberLocal(): Int {
+    return Random.nextInt(1, 3)
+}
 suspend fun getRandomNumberFromApi(): Int {
     return withContext(Dispatchers.IO) {
         val url = URL("https://csrng.net/csrng/csrng.php?min=1&max=6")
@@ -291,7 +303,9 @@ suspend fun getRandomNumberFromApi(): Int {
         try {
             connection.inputStream.bufferedReader().use { reader ->
                 val response = reader.readText()
+                Log.d("LuckySpin", "Respuesta de la API: $response") // Log de la respuesta de la API
                 val randomNumber = response.substringAfter("\"random\":").substringBefore("}").toInt()
+                Log.d("LuckySpin", "Número aleatorio obtenido de la API: $randomNumber")
                 randomNumber
             }
         } finally {
@@ -299,6 +313,7 @@ suspend fun getRandomNumberFromApi(): Int {
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
