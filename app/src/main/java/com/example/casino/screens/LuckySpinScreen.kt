@@ -1,7 +1,5 @@
 package com.example.casino.screens
 
-import android.content.Context
-import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -32,14 +30,10 @@ import com.example.casino.ui.theme.CasinoTheme
 import kotlinx.coroutines.*
 import java.net.HttpURLConnection
 import java.net.URL
-<<<<<<< HEAD
-=======
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.util.Log
 import androidx.compose.runtime.Composable
->>>>>>> 2efc35310c3ffa192b8b35476c99662393cb3e18
 import kotlin.random.Random
 
 class Tragamonedas : ComponentActivity() {
