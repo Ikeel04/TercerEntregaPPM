@@ -1,28 +1,17 @@
 package com.example.casino.screens
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,9 +29,10 @@ private val buttonHeight = 60.dp
 private val textFieldSpacing = 20.dp
 
 @Composable
-fun LoginScreen(navController : NavController, authViewModel: AuthViewModel) {
+fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
     val (username, setUsername) = remember { mutableStateOf("") }
     val (password, setPassword) = remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
     val authState = authViewModel.authState.observeAsState()
     val context = LocalContext.current
 
@@ -66,7 +56,13 @@ fun LoginScreen(navController : NavController, authViewModel: AuthViewModel) {
             LoginTextField(value = username, label = "E-MAIL", onValueChange = setUsername)
             Spacer(modifier = Modifier.height(textFieldSpacing))
 
-            LoginTextField(value = password, label = "CONTRASEÑA", onValueChange = setPassword)
+            LoginPasswordField(
+                value = password,
+                label = "CONTRASEÑA",
+                onValueChange = setPassword,
+                passwordVisible = passwordVisible,
+                onVisibilityChange = { passwordVisible = !passwordVisible }
+            )
             Spacer(modifier = Modifier.height(textFieldSpacing))
 
             LoginButton(onClick = {
@@ -104,6 +100,29 @@ fun LoginTextField(value: String, label: String, onValueChange: (String) -> Unit
 }
 
 @Composable
+fun LoginPasswordField(
+    value: String,
+    label: String,
+    onValueChange: (String) -> Unit,
+    passwordVisible: Boolean,
+    onVisibilityChange: () -> Unit
+) {
+    TextField(
+        value = value,
+        onValueChange = onValueChange,
+        maxLines = 1,
+        label = { Text(label, fontSize = 13.sp) },
+        modifier = Modifier.fillMaxWidth(0.8f),
+        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        trailingIcon = {
+            IconButton(onClick = onVisibilityChange) {
+                Text(if (passwordVisible) "Ocultar" else "Mostrar", color = linkColor, fontSize = smallTextSize)
+            }
+        }
+    )
+}
+
+@Composable
 fun LoginButton(onClick: () -> Unit) {
     Button(
         onClick = onClick,
@@ -135,4 +154,3 @@ fun LoginTextButton(text: String, onClick: () -> Unit) {
         )
     }
 }
-
