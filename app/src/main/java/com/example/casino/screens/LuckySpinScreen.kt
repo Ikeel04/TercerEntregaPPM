@@ -1,5 +1,8 @@
 package com.example.casino.screens
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,28 +16,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.casino.CounterViewModel
 import com.example.casino.R
 import com.example.casino.ui.theme.CasinoTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.net.HttpURLConnection
 import java.net.URL
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import androidx.compose.runtime.Composable
 import kotlin.random.Random
-import androidx.compose.ui.platform.LocalContext
-import kotlinx.coroutines.delay
 
 class Tragamonedas : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,20 +47,20 @@ class Tragamonedas : ComponentActivity() {
 }
 
 @Composable
-fun LuckySpinScreen(navController: NavController) {
-    var result by remember { mutableStateOf("") }
-    var saldo by remember { mutableStateOf(1000) }
-    var apuesta by remember { mutableStateOf("") }
+fun LuckySpinScreen(
+    navController: NavController,
+    counterViewModel: CounterViewModel = viewModel()
+) {
+    val saldo by counterViewModel.saldo.collectAsState()
     val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
-
-    // Estado para controlar el giro
+    var result by remember { mutableStateOf("") }
+    var apuesta by remember { mutableStateOf("") }
     var isSpinning by remember { mutableStateOf(false) }
     var reelImages by remember { mutableStateOf(listOf(R.drawable.corazon, R.drawable.arcoiris, R.drawable.herradura)) }
+    val context = LocalContext.current
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         Image(
             painter = painterResource(id = R.drawable.fondo1),
@@ -97,10 +95,10 @@ fun LuckySpinScreen(navController: NavController) {
                         reelImages = List(3) { getRandomIcon() }
                         if (reelImages.distinct().size == 1) {
                             result = "¡You win!"
-                            saldo += apuestaInt
+                            counterViewModel.agregarGanancia(apuestaInt)
                         } else {
                             result = "You lose"
-                            saldo -= apuestaInt
+                            counterViewModel.agregarPerdida(apuestaInt)
                         }
                         apuesta = "" // Limpiar el campo de apuesta después de girar
                     }
@@ -156,8 +154,7 @@ fun IconCards(reelImages: List<Int>, isSpinning: Boolean) {
     Box(
         modifier = Modifier
             .width(350.dp)
-            .padding(start = 16.dp)
-            .padding(end = 16.dp)
+            .padding(horizontal = 16.dp)
             .background(Color(0xFFFFD700), shape = RoundedCornerShape(16.dp))
             .padding(15.dp)
     ) {
@@ -177,7 +174,6 @@ fun IconCards(reelImages: List<Int>, isSpinning: Boolean) {
 fun CardItem(iconRes: Int, isSpinning: Boolean) {
     var currentIcon by remember { mutableStateOf(iconRes) }
 
-    // Si el carrete está girando, cambia la imagen rápidamente
     LaunchedEffect(isSpinning) {
         if (isSpinning) {
             while (isSpinning) {
@@ -185,7 +181,6 @@ fun CardItem(iconRes: Int, isSpinning: Boolean) {
                 delay(100L) // Velocidad de cambio de imagen
             }
         } else {
-            // Al detenerse, mantiene el icono final asignado desde IconCards
             currentIcon = iconRes
         }
     }
@@ -211,9 +206,6 @@ fun CardItem(iconRes: Int, isSpinning: Boolean) {
 fun getRandomIcon(): Int {
     val icons = listOf(R.drawable.corazon, R.drawable.arcoiris, R.drawable.herradura)
     return icons[Random.nextInt(icons.size)]
-}
-fun getRandomNumberLocal(): Int {
-    return Random.nextInt(1, 3)
 }
 
 @Composable

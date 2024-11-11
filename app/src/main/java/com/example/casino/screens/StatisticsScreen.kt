@@ -29,9 +29,8 @@ fun StatisticsScreen(
     navController: NavController,
     counterViewModel: CounterViewModel = viewModel()
 ) {
-    val luckySpinCount by counterViewModel.luckySpinCount.collectAsState()
-    val torneoCount by counterViewModel.torneoCount.collectAsState()
-    val ruletaCount by counterViewModel.ruletaCount.collectAsState()
+    val dineroGanado by counterViewModel.dineroGanado.collectAsState()
+    val dineroPerdido by counterViewModel.dineroPerdido.collectAsState()
     val juegoFavorito by counterViewModel.juegoFavorito.collectAsState()
 
     Box(
@@ -63,12 +62,12 @@ fun StatisticsScreen(
                 modifier = Modifier.padding(bottom = 24.dp)
             )
 
-            StatisticItem(label = "LUCKY SPIN:", value = "$luckySpinCount")
+            // Dinero Ganado y Perdido (compartido entre juegos)
+            StatisticItem(label = "DINERO GANADO:", value = "$dineroGanado")
+            StatisticItem(label = "DINERO PERDIDO:", value = "$dineroPerdido")
             Spacer(modifier = Modifier.height(16.dp))
-            StatisticItem(label = "TORNEO:", value = "$torneoCount")
-            Spacer(modifier = Modifier.height(16.dp))
-            StatisticItem(label = "RULETA:", value = "$ruletaCount")
-            Spacer(modifier = Modifier.height(16.dp))
+
+            // Juego Favorito
             StatisticItem(label = "JUEGO FAVORITO:", value = juegoFavorito)
             Spacer(modifier = Modifier.height(40.dp))
 

@@ -27,7 +27,7 @@ fun AppNavigation(authViewModel: AuthViewModel, counterViewModel: CounterViewMod
             LuckyCharmsView(navController, authViewModel, counterViewModel) // Pasa counterViewModel aquí
         }
         composable(route = AppScreens.LuckySpinScreen.route){
-            LuckySpinScreen(navController)
+            LuckySpinScreen(navController, counterViewModel)
         }
         composable(route = AppScreens.StatisticsScreen.route){
             StatisticsScreen(navController, counterViewModel) // Pasa counterViewModel aquí
