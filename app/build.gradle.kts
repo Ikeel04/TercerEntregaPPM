@@ -54,7 +54,7 @@ android {
 
 dependencies {
 
-    implementation("androidx.navigation:navigation-compose:2.6.0")
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -66,6 +66,11 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.firebase.auth.ktx)
     implementation(libs.androidx.runtime.livedata)
+
+    implementation (libs.ui)
+    implementation (libs.material3)
+
+
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore.ktx)
     testImplementation(libs.junit)
