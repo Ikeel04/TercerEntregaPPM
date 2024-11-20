@@ -7,17 +7,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -27,12 +17,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,8 +29,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.casino.CounterViewModel
 import com.example.casino.R
 import com.example.casino.ui.theme.CasinoTheme
 import kotlinx.coroutines.delay
@@ -64,8 +51,11 @@ class Ruleta : ComponentActivity() {
 }
 
 @Composable
-fun RouletteScreen(navController: NavController) {
-    var saldo by remember { mutableStateOf(1000) }
+fun RouletteScreen(
+    navController: NavController,
+    counterViewModel: CounterViewModel = viewModel()
+) {
+    val saldo by counterViewModel.saldo.collectAsState()
     var apuesta by remember { mutableStateOf("") }
     var isSpinning by remember { mutableStateOf(false) }
     var resultadoRuleta by remember { mutableStateOf<Int?>(null) }
@@ -116,7 +106,6 @@ fun RouletteScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(5.dp))
 
-            // Muestra el resultado de la ruleta
             resultadoRuleta?.let { resultado ->
                 Text(
                     text = "Resultado: $resultado",
@@ -127,7 +116,6 @@ fun RouletteScreen(navController: NavController) {
             }
 
             Spacer(modifier = Modifier.height(5.dp))
-            //La ruleta gira al presionar el botón "Girar" y también está el botón para volver
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
@@ -144,11 +132,17 @@ fun RouletteScreen(navController: NavController) {
                                 isSpinning = false
                                 evaluarResultado(
                                     resultado,
-                                    saldo,
                                     apuestaValor,
                                     apuestaSeleccionada!!,
-                                    { nuevoSaldo -> saldo = nuevoSaldo }
+                                    { ganancia ->
+                                        if (ganancia > 0) {
+                                            counterViewModel.agregarGanancia(ganancia)
+                                        } else {
+                                            counterViewModel.agregarPerdida(-ganancia)
+                                        }
+                                    }
                                 )
+                                counterViewModel.incrementRuletaCount()
                             }
                         }
                     },
@@ -173,13 +167,13 @@ fun RouletteScreen(navController: NavController) {
         }
     }
 }
-//Imagen de la ruleta
+
 @Composable
 fun RouletteWheel(isSpinning: Boolean) {
     Box(
         modifier = Modifier
             .size(300.dp)
-            .animateRotation(isSpinning) // Aplicamos la animación
+            .animateRotation(isSpinning)
             .clip(CircleShape)
     ) {
         Image(
@@ -189,30 +183,27 @@ fun RouletteWheel(isSpinning: Boolean) {
         )
     }
 }
-//Campos de saldo disponible y saldo a apostar
+
 @Composable
 fun ActionButtonsRuleta(saldo: Int, apuesta: String, onApuestaChange: (String) -> Unit) {
-    Box(
-    ) {
-        Column {
-            Box(
-                modifier = Modifier
-                    .background(Color.White, shape = RoundedCornerShape(10.dp))
-                    .padding(10.dp)
-                    .width(260.dp)
-            ) {
-                Text(text = "Saldo disponible: $saldo")
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            TextField(
-                value = apuesta,
-                onValueChange = onApuestaChange,
-                label = { Text("Saldo a apostar") }
-            )
+    Column {
+        Box(
+            modifier = Modifier
+                .background(Color.White, shape = RoundedCornerShape(10.dp))
+                .padding(10.dp)
+                .width(260.dp)
+        ) {
+            Text(text = "Saldo disponible: $saldo")
         }
+        Spacer(modifier = Modifier.height(8.dp))
+        TextField(
+            value = apuesta,
+            onValueChange = onApuestaChange,
+            label = { Text("Saldo a apostar") }
+        )
     }
 }
-//Tablero de la ruleta
+
 @Composable
 fun RouletteBoard() {
     val numbers = listOf(
@@ -242,7 +233,7 @@ fun RouletteBoard() {
         }
     )
 }
-// Botones de apuestas
+
 @Composable
 fun BettingButtons(
     saldo: Int,
@@ -276,10 +267,9 @@ fun BettingButtons(
         }
     }
 }
-//Función para saber si el jugador ganó o perdió dependiendo de la apuesta realizada, se actualiza su saldo
+
 fun evaluarResultado(
     resultado: Int,
-    saldo: Int,
     apuestaValor: Int,
     tipoApuesta: String,
     actualizarSaldo: (Int) -> Unit
@@ -303,9 +293,9 @@ fun evaluarResultado(
         else -> 0
     }
 
-    actualizarSaldo(if (esGanador) saldo + premio else saldo - apuestaValor)
+    actualizarSaldo(if (esGanador) premio else -apuestaValor)
 }
-//Giro de la ruleta
+
 @Composable
 fun Modifier.animateRotation(isSpinning: Boolean): Modifier {
     val rotation by animateFloatAsState(
@@ -314,7 +304,6 @@ fun Modifier.animateRotation(isSpinning: Boolean): Modifier {
     )
     return this.graphicsLayer(rotationZ = rotation)
 }
-
 
 @Preview(showBackground = true)
 @Composable
