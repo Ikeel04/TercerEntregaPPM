@@ -97,11 +97,11 @@ fun LuckyCharmsView(
                     }
                 )
                 FeatureSection(
-                    title = "Torneo",
+                    title = "Especial",
                     iconRes = R.drawable.torneo,
                     onClick = {
                         counterViewModel.incrementTorneoCount()
-                        navController.navigate(AppScreens.LobbyScreen.route)
+                        navController.navigate(AppScreens.PiedraPapelTijerasApp.route)
                     }
                 )
             }
@@ -114,7 +114,7 @@ fun LuckyCharmsView(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 FeatureSection(
-                    title = "Ruleta",
+                    title = "Ruleta Piruleta",
                     iconRes = R.drawable.ruleta,
                     onClick = {
                         counterViewModel.incrementRuletaCount()

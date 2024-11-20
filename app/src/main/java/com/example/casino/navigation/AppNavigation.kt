@@ -12,6 +12,7 @@ import com.example.casino.screens.RegisterScreen
 import com.example.casino.screens.StatisticsScreen
 import com.example.casino.screens.LobbyScreen
 import com.example.casino.screens.LuckySpinScreen
+import com.example.casino.screens.PiedraPapelTijerasApp
 import com.example.casino.screens.RouletteScreen
 
 @Composable
@@ -32,6 +33,9 @@ fun AppNavigation(authViewModel: AuthViewModel, counterViewModel: CounterViewMod
         }
         composable(route = AppScreens.RouletteScreen.route){
             RouletteScreen(navController)
+        }
+        composable(route = AppScreens.PiedraPapelTijerasApp.route){
+            PiedraPapelTijerasApp(navController)
         }
         composable(route = AppScreens.StatisticsScreen.route){
             StatisticsScreen(navController, counterViewModel) // Pasa counterViewModel aquí
