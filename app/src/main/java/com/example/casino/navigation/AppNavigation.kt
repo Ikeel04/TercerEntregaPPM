@@ -26,19 +26,19 @@ fun AppNavigation(authViewModel: AuthViewModel, counterViewModel: CounterViewMod
             RegisterScreen(navController, authViewModel)
         }
         composable(route = AppScreens.LuckyCharmView.route){
-            LuckyCharmsView(navController, authViewModel, counterViewModel) // Pasa counterViewModel aquí
+            LuckyCharmsView(navController, authViewModel, counterViewModel)
         }
         composable(route = AppScreens.LuckySpinScreen.route){
             LuckySpinScreen(navController, counterViewModel)
         }
         composable(route = AppScreens.RouletteScreen.route){
-            RouletteScreen(navController)
+            RouletteScreen(navController, counterViewModel)
         }
         composable(route = AppScreens.PiedraPapelTijerasApp.route){
-            PiedraPapelTijerasApp(navController)
+            PiedraPapelTijerasApp(counterViewModel)
         }
         composable(route = AppScreens.StatisticsScreen.route){
-            StatisticsScreen(navController, counterViewModel) // Pasa counterViewModel aquí
+            StatisticsScreen(navController, counterViewModel)
         }
         composable(route = AppScreens.LobbyScreen.route){
             LobbyScreen(navController)

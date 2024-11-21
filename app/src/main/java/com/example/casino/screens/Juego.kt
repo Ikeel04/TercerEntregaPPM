@@ -6,22 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,8 +27,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.example.casino.CounterViewModel
 import com.example.casino.R
 import com.example.casino.ui.theme.CasinoTheme
 
@@ -47,19 +39,21 @@ class MainActivity : ComponentActivity() {
         setContent {
             CasinoTheme {
                 val navController = rememberNavController()
-                PiedraPapelTijerasApp(navController)
+                PiedraPapelTijerasApp()
             }
         }
     }
 }
 
 @Composable
-fun PiedraPapelTijerasApp(navController: NavHostController) {
+fun PiedraPapelTijerasApp(
+    counterViewModel: CounterViewModel = viewModel()
+) {
+    val saldo by counterViewModel.saldo.collectAsState()
     var currentPlayer by remember { mutableStateOf(1) }
     var player1Choice by remember { mutableStateOf<Int?>(null) }
     var player2Choice by remember { mutableStateOf<Int?>(null) }
     var resultMessage by remember { mutableStateOf("") }
-    var saldo by remember { mutableStateOf(1000) }
     var apuesta by remember { mutableStateOf("") }
 
     val options = listOf(
@@ -84,17 +78,21 @@ fun PiedraPapelTijerasApp(navController: NavHostController) {
             onChoiceClick = { index ->
                 if (currentPlayer == 1) {
                     player1Choice = index
-                    currentPlayer = 2 // Cambiar a Jugador 2
+                    currentPlayer = 2
                 } else {
                     player2Choice = index
                     resultMessage = determineWinner(player1Choice!!, player2Choice!!)
-                    currentPlayer = 1 // Reiniciar para el próximo juego
-                    updateSaldo(apuesta, saldo, resultMessage) { newSaldo -> saldo = newSaldo }
+                    currentPlayer = 1
+
+                    val apuestaValue = apuesta.toIntOrNull() ?: 0
+                    when (resultMessage) {
+                        "¡Jugador 1 gana!" -> counterViewModel.agregarGanancia(apuestaValue)
+                        "¡Jugador 2 gana!" -> counterViewModel.agregarPerdida(apuestaValue)
+                    }
                 }
             }
         )
 
-        // Resultado
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(vertical = 100.dp)
@@ -120,7 +118,6 @@ fun PiedraPapelTijerasApp(navController: NavHostController) {
             }
         }
 
-        // Acción de Apuesta
         ApuestaButtons(
             saldo = saldo,
             apuesta = apuesta,
@@ -206,22 +203,11 @@ fun determineWinner(player1Choice: Int, player2Choice: Int): String {
     }
 }
 
-fun updateSaldo(apuesta: String, saldo: Int, result: String, onUpdate: (Int) -> Unit) {
-    val apuestaValue = apuesta.toIntOrNull() ?: 0
-    onUpdate(
-        when (result) {
-            "¡Jugador 1 gana!" -> saldo + apuestaValue
-            "¡Jugador 2 gana!" -> saldo - apuestaValue
-            else -> saldo
-        }
-    )
-}
-
 @Preview(showBackground = true)
 @Composable
 fun PiedraPapelTijerasPreview() {
     CasinoTheme {
-        val navController = rememberNavController()
-        PiedraPapelTijerasApp(navController)
+        rememberNavController()
+        PiedraPapelTijerasApp()
     }
 }
